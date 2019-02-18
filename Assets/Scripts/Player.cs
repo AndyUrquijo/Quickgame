@@ -30,10 +30,7 @@ public class Player : MonoBehaviour
     {
         inputX = Input.GetAxisRaw("Horizontal");
 
-        if(path.Distance > 1000)
-        {
-            Win();
-        }
+
 
         if(invulnerabilityDelay >0)
         {
@@ -44,6 +41,9 @@ public class Player : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (path.Distance > 1000)
+            Win();
+
         body.AddForce(Vector2.right*inputX*Force);
         if (invulnerabilityDelay >0)
             invulnerabilityDelay -= Time.fixedDeltaTime;
@@ -55,7 +55,7 @@ public class Player : MonoBehaviour
     void CheckHit()
     {
         Debug.Log("boop");
-        if (invulnerabilityDelay > 0)
+        if (invulnerabilityDelay > 0 || !enabled)
             return;
 
         invulnerabilityDelay = 2;
@@ -78,6 +78,7 @@ public class Player : MonoBehaviour
     void Lose()
     {
         Debug.Log("Game Over");
+        enabled = false;
         Destroy(gameObject);
         LoseScreen.SetActive(true);
         path.StopCounter = true;
