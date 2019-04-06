@@ -16,23 +16,36 @@ public class Player : MonoBehaviour
     Rigidbody2D body;
     SpriteRenderer spriteRend;
 
+    public GameObject TutorialText;
     public GameObject WinScreen;
     public GameObject LoseScreen;
 
     void Awake()
     {
         spriteRend = GetComponent<SpriteRenderer>();
-        body = GetComponent<Rigidbody2D>();   
+        body = GetComponent<Rigidbody2D>();
+        StartCoroutine(_FlashTutorial());
     }
 
-    // Update is called once per frame
+    IEnumerator _FlashTutorial()
+    {
+        float tutorialDuration = 2;
+        while (tutorialDuration > 0)
+        {
+            int intDel = (int)(tutorialDuration*7);
+            TutorialText.SetActive(intDel%3 != 0);
+            yield return null;
+            tutorialDuration -= Time.deltaTime;
+        }
+        TutorialText.SetActive(false);
+    }
     void Update()
     {
         inputX = Input.GetAxisRaw("Horizontal");
 
 
 
-        if(invulnerabilityDelay >0)
+        if (invulnerabilityDelay >0)
         {
             int intDel = (int)(invulnerabilityDelay*8);
             spriteRend.enabled = intDel%2 == 0;
