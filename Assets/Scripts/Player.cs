@@ -17,33 +17,37 @@ public class Player : MonoBehaviour
     SpriteRenderer spriteRend;
 
     public GameObject TutorialText;
+    public GameObject TutorialText2;
     public GameObject WinScreen;
     public GameObject LoseScreen;
+
+    public float inputHeldTimer = 0;
 
     void Awake()
     {
         spriteRend = GetComponent<SpriteRenderer>();
         body = GetComponent<Rigidbody2D>();
-        StartCoroutine(_FlashTutorial());
+        StartCoroutine(_FlashObject(TutorialText, 2));
+        TutorialText2.SetActive(false);
     }
 
-    IEnumerator _FlashTutorial()
+    IEnumerator _FlashObject(GameObject go, float duration)
     {
-        float tutorialDuration = 2;
-        while (tutorialDuration > 0)
+        while (duration > 0)
         {
-            int intDel = (int)(tutorialDuration*7);
-            TutorialText.SetActive(intDel%3 != 0);
+            int intDel = (int)(duration*7);
+            go.SetActive(intDel%3 != 0);
             yield return null;
-            tutorialDuration -= Time.deltaTime;
+            duration -= Time.deltaTime;
         }
-        TutorialText.SetActive(false);
+        go.SetActive(false);
     }
     void Update()
     {
         inputX = Input.GetAxisRaw("Horizontal");
 
-
+        if (inputX != 0)
+            inputHeldTimer += Time.deltaTime;
 
         if (invulnerabilityDelay >0)
         {
@@ -70,6 +74,9 @@ public class Player : MonoBehaviour
         Debug.Log("boop");
         if (invulnerabilityDelay > 0 || !enabled)
             return;
+
+        if(Health == 3 && inputHeldTimer < 1f)
+            StartCoroutine(_FlashObject(TutorialText2, 1));
 
         invulnerabilityDelay = 2;
         Health--;
