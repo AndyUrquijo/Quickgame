@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
@@ -15,35 +16,54 @@ public class Player : MonoBehaviour
 
     Rigidbody2D body;
     SpriteRenderer spriteRend;
+    AudioSource audioSource;
+    AudioListener audioListener;
 
     public GameObject TutorialText;
+    public GameObject TutorialText2;
     public GameObject WinScreen;
     public GameObject LoseScreen;
+
+    public float inputHeldTimer = 0;
+    public Toggle muteToggle;
 
     void Awake()
     {
         spriteRend = GetComponent<SpriteRenderer>();
         body = GetComponent<Rigidbody2D>();
-        StartCoroutine(_FlashTutorial());
+        audioSource = GetComponent<AudioSource>();
+        audioListener = FindObjectOfType<AudioListener>();
+
+        StartCoroutine(_FlashObject(TutorialText, 2));
+        TutorialText2.SetActive(false);
+
+        if (PlayerPrefs.GetInt("mute") == 1) muteToggle.isOn = true;
     }
 
-    IEnumerator _FlashTutorial()
+    public void Mute(bool on)
     {
-        float tutorialDuration = 2;
-        while (tutorialDuration > 0)
+        PlayerPrefs.SetInt("mute", on ? 1 : 0);
+        AudioListener.volume = on ? 0 : 1;
+    }
+
+
+    IEnumerator _FlashObject(GameObject go, float duration)
+    {
+        while (duration > 0)
         {
-            int intDel = (int)(tutorialDuration*7);
-            TutorialText.SetActive(intDel%3 != 0);
+            int intDel = (int)(duration*7);
+            go.SetActive(intDel%4 != 0);
             yield return null;
-            tutorialDuration -= Time.deltaTime;
+            duration -= Time.deltaTime;
         }
-        TutorialText.SetActive(false);
+        go.SetActive(false);
     }
     void Update()
     {
         inputX = Input.GetAxisRaw("Horizontal");
 
-
+        if (inputX != 0)
+            inputHeldTimer += Time.deltaTime;
 
         if (invulnerabilityDelay >0)
         {
@@ -71,10 +91,13 @@ public class Player : MonoBehaviour
         if (invulnerabilityDelay > 0 || !enabled)
             return;
 
+        if(Health == 3 && inputHeldTimer < .5f)
+            StartCoroutine(_FlashObject(TutorialText2, 2));
+
         invulnerabilityDelay = 2;
         Health--;
         Healthbars[Health].SetActive(false);
-
+        audioSource.PlayOneShot(audioSource.clip);
         if (Health <= 0)
             Lose();
 

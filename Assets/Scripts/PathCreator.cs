@@ -35,6 +35,10 @@ public class PathCreator : MonoBehaviour
     public float downOffset = 2;
 
     [Header("Progression settings")]
+
+    [Range(0,1), PlayOnly,ReadOnly]
+    public float Progression;
+
     public AnimationCurve WidthCurve;
     public AnimationCurve WidthVarCurve;
     public AnimationCurve SpeedCurve;
@@ -150,6 +154,7 @@ public class PathCreator : MonoBehaviour
         if (!StopCounter)
             Distance+= dX;
 
+        Progression = Distance/1000f;
         Speed = SpeedCurve.Evaluate(Distance);
 
         CounterText.text = (int)Distance + "m";
