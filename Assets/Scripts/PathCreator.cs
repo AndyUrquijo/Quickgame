@@ -4,24 +4,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-#if UNITY_EDITOR
-using UnityEditor;
-[CustomEditor(typeof(PathCreator))]
-public class PathCreatorEditor : Editor
-{
-    public override void OnInspectorGUI()
-    {
-        DrawDefaultInspector();
-        PathCreator obj = (PathCreator)target;
-        if (GUILayout.Button("Make Path"))
-        {
-            obj.MakePath();
-        }
-    }
-}
-#endif
-
-
 public class PathCreator : MonoBehaviour
 {
     [PlayOnly] public float Speed = 1;
@@ -55,6 +37,7 @@ public class PathCreator : MonoBehaviour
     MeshFilter meshFilter;
 
     Material material;
+    MaterialPropertyBlock materialPropBlock;
 
     EdgeCollider2D edgeA;
     EdgeCollider2D edgeB;
@@ -72,6 +55,7 @@ public class PathCreator : MonoBehaviour
 
     void Start()
     {
+        materialPropBlock = new MaterialPropertyBlock();
         MakePath();
     }
 
@@ -80,6 +64,7 @@ public class PathCreator : MonoBehaviour
         meshRend = GetComponent<MeshRenderer>();
         meshFilter = GetComponent<MeshFilter>();
         material = meshRend.material;
+        meshRend.GetPropertyBlock(materialPropBlock);
 
         var edges = GetComponents<EdgeCollider2D>();
         edgeA = edges[0];
@@ -174,7 +159,8 @@ public class PathCreator : MonoBehaviour
             positionIndex = (positionIndex+1)%N;
             UpdateComponents();
         }
-        material.color = BackgroundGradient.Evaluate(Distance/1000f);
+        materialPropBlock.SetColor("_Color", BackgroundGradient.Evaluate(Distance/1000f));
+        meshRend.SetPropertyBlock(materialPropBlock);
     }
 
     void UpdateComponents()

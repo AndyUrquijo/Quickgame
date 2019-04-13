@@ -17,7 +17,6 @@ public class Player : MonoBehaviour
     Rigidbody2D body;
     SpriteRenderer spriteRend;
     AudioSource audioSource;
-    AudioListener audioListener;
 
     public GameObject TutorialText;
     public GameObject TutorialText2;
@@ -32,7 +31,6 @@ public class Player : MonoBehaviour
         spriteRend = GetComponent<SpriteRenderer>();
         body = GetComponent<Rigidbody2D>();
         audioSource = GetComponent<AudioSource>();
-        audioListener = FindObjectOfType<AudioListener>();
 
         StartCoroutine(_FlashObject(TutorialText, 2));
         TutorialText2.SetActive(false);
