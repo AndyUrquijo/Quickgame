@@ -94,12 +94,13 @@ public class Player : MonoBehaviour
 
         invulnerabilityDelay = 2;
         Health--;
-        Healthbars[Health].SetActive(false);
+        Healthbars[Health].GetComponent<Animator>().SetTrigger("Destroy");
         audioSource.PlayOneShot(audioSource.clip);
         if (Health <= 0)
             Lose();
 
     }
+
 
     void Win()
     {
