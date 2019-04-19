@@ -843,7 +843,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.7262867, g: 0.8862745, b: 0.5568628, a: 1}
+  m_Color: {r: 0.21176471, g: 0.76862746, b: 1, a: 1}
   m_RaycastTarget: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -853,7 +853,7 @@ MonoBehaviour:
   m_FontData:
     m_Font: {fileID: 12800000, guid: af2677a724a2d7b4f8ba22c4e057c793, type: 3}
     m_FontSize: 253
-    m_FontStyle: 0
+    m_FontStyle: 1
     m_BestFit: 0
     m_MinSize: 0
     m_MaxSize: 253
@@ -2491,7 +2491,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2093115974
 RectTransform:
   m_ObjectHideFlags: 0
