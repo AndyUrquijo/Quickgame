@@ -114,7 +114,8 @@ public class Player : MonoBehaviour
     {
         Debug.Log("Game Over");
         enabled = false;
-        Destroy(gameObject);
+        GetComponent<Collider2D>().enabled = false;
+        GetComponent<Animator>().SetTrigger("Destroy");
         LoseScreen.SetActive(true);
         path.StopCounter = true;
     }
